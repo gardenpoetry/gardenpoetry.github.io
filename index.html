@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Daily Poetry</title>
+    <link rel="stylesheet" type="text/css" href="garden.css">
+    <link href="9.ico" rel="icon" type="image/x-icon">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js"></script>
+  </head>
+
+  <body>
+    <div id="title">
+      <a id="title-link" onmouseover="hover(this)" onmouseleave="leave(this)" href="index.html">
+        <img id="title-image" src="9.png" width="150px">
+        <h1 style="font-size: 40px;"><span style="font-size:50px;font-family: 'Macherie', serif;">G</span>arden Poetry</h1>
+      </a>
+    </div>
+
+    <div id="content">
+      <div style="display:flex;flex-direction: column;align-items:center;width:50%;margin-bottom:80px">
+        <div id="poem-title">Loading...</div>
+        <div id="author"></div>
+        <div id="poem">It might take a few seconds to load. Please be patient.</div>
+      </div>
+
+      <div onmouseover="hover(this)" onmouseleave="leave(this)" id="about-section" style="filter: contrast(20%)">
+        <div>
+          <div class="header">About</div>
+          <div style="font-size:1.4em">A garden filled with poetry. This is a small project of Daily Poetry. Every 24 hours, GMT+0, this website updates with a random poem. All poems are in public domain from <a href="https://www.poetrydb.org/" target="_blank">poetryDB</a></div>
+        </div>
+
+        <div style="width:100%">
+          <div id="time" style="font-size:2em;font-family:monospace;">24:00:00</div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.js"></script>
+  <script>
+    let date = new Date();
+    let seed = "123"
+
+    function hover(e) {
+      e.style.filter = "contrast(100%)";
+    }
+
+    function leave(e) {
+      e.style.filter = "contrast(10%)";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateTime();
+      updatePoem();
+    })
+
+    function updateTime() {
+      date = new Date();
+      let utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+
+      let currentSeconds = utcDate.getHours()*3600 + utcDate.getMinutes() * 60 + utcDate.getSeconds();
+      let secondsLeft = 24*3600 - currentSeconds;
+      let hoursLeft = Math.floor(secondsLeft/3600);
+      secondsLeft = secondsLeft-hoursLeft*3600;
+      let minutesLeft = Math.floor(secondsLeft/60);
+      secondsLeft = secondsLeft-minutesLeft*60;
+
+      if(hoursLeft == 0 && minutesLeft == 0 && secondsLeft <= 0) {
+        window.location.href = window.location.pathname + window.location.search + window.location.hash;
+      }
+
+      time.innerHTML = "It is " + date.toUTCString() + "<br><br>" + `${hoursLeft} hours, ${minutesLeft} minutes, and ${secondsLeft} seconds until next poem`;
+
+      seed = date.getUTCMonth() + "" + date.getUTCDate() + "" + date.getUTCFullYear();
+      console.log(seed)
+      
+      setTimeout(updateTime, 1000);
+    }
+
+    function updatePoem() {
+      Math.seedrandom(seed)
+      let poemTitle = document.getElementById("poem-title");
+      let poem = document.getElementById("poem");
+      let author = document.getElementById("author");
+      // Default poet if something goes wrong
+      let poet = "Shakespear";
+
+      const xhr = new XMLHttpRequest();
+
+      // Get the list of all authors
+      xhr.open("GET", "https://poetrydb.org/author");
+      xhr.send();
+
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          let data = JSON.parse(xhr.responseText);
+          // Get a poet using a seeded random number
+          poet = data.authors[Math.floor(Math.random() * data.authors.length)];
+          xhr.open("GET", "https://poetrydb.org/author/" + poet);
+          xhr.send();
+
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              let data = JSON.parse(xhr.responseText);
+
+              // Get a poem using a seeded random number
+              data = data[Math.floor(Math.random() * data.length)];
+              poemTitle.innerHTML = "<center>" + data["title"] + "</center>";
+              poem.innerHTML = poemParse(data["lines"]);
+              author.innerHTML = data["author"];
+            }
+          }
+        }
+      }
+    }
+
+    function poemParse(lines) {
+      let result = "<br>";
+      for(let i = 0; i < lines.length; i++) {
+        result += lines[i] += "<br>";
+      }
+
+      return result;
+    }
+  </script>
+</html>

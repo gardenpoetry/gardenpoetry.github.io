@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+@font-face {
+	font-family: 'Macherie';
+	src: url("Macherie.otf");
+}
+
+body {
+	font-family: 'Playfair Display', serif;
+	color: black;
+}
+
+#title {
+	margin: 1% 10% 0px 10%;
+}
+
+#title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+#title-link {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 3%;
+	filter: contrast(10%);
+	transition: 0.4s;
+}
+
+#content {
+	margin: 3% 10% 0px 10%;
+	display: flex;
+	justify-content: center;
+	gap: 10%;
+}
+
+#poem-title {
+	font-family: 'Macherie', serif;
+	font-size: 3em;
+	margin-bottom: 1%;
+}
+
+#poem {
+	font-size: 1.4em;
+}
+
+.header {
+	margin-bottom: 1%;
+	font-family: 'Macherie', serif;
+	font-size: 2.5em;
+}
+
+#about-section {
+	display:flex;
+	flex-direction: column;
+	align-items:center;
+	justify-content: flex-start;
+	width:30%;
+	gap:40px;
+	transition: 0.4s;
+}
+
+#author {
+	font-size: 1.4em;
+}
+
+@media (max-width:800px)  {
+	#content {
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		margin: 0;
+	}
+}
