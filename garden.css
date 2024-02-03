@@ -35,6 +35,14 @@ body {
 	gap: 10%;
 }
 
+.poem-container {
+	display:flex;
+	flex-direction: column;
+	align-items:center;
+	width:50%;
+	margin-bottom:80px;
+}
+
 #poem-title {
 	font-family: 'Macherie', serif;
 	font-size: 3em;
@@ -71,5 +79,18 @@ body {
 		align-items: center;
 		width: 100%;
 		margin: 0;
+	}
+
+	.poem-container {
+		width: 100%;
+	}
+
+	#poem-title {
+		margin-top: 40px;
+	}
+
+	#about-section {
+		width: 80%;
+		margin-bottom:80px;
 	}
 }
